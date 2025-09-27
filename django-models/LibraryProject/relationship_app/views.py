@@ -12,7 +12,7 @@ def book_list(request):
     """Function-based view to list all books and their authors"""
     books = Book.objects.all()
     context = {"books": books}
-    return render(request, "relationship_app/book_list.html", context)
+    return render(request, "relationship_app/list_book.html", context)
 
 
 # ---------------- Class-Based View ----------------
