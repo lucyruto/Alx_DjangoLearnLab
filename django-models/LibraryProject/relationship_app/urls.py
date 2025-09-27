@@ -7,10 +7,10 @@ urlpatterns = [
     path("books/", book_list, name="book-list"),
     path("libraries/<int:pk>/", LibraryDetailView.as_view(), name="library-detail"),
 
-    # authentication views
+    # Authentication views
     path("register/", register_view, name="register"),
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
+    path("login/", LoginView.as_view(template_name="relationship_app/login.html"), name="login"),
+    path("logout/", LogoutView.as_view(template_name="relationship_app/logout.html"), name="logout"),
 ]
 
 
