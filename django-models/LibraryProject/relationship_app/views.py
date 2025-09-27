@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from .models import Book
-from django.views.generic import DetailView
+# from django.views.generic import DetailView
 from .models import Library
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.generic.detail import DetailView
 
 
 # ---------------- Function-Based View ----------------
