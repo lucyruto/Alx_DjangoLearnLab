@@ -7,8 +7,8 @@ urlpatterns = [
     path("books/", book_list, name="book-list"),
     path("libraries/<int:pk>/", LibraryDetailView.as_view(), name="library-detail"),
     path('books/add/', views.add_book, name='add-book'),
-    path('books/<int:book_id>/edit/', views.edit_book, name='edit-book'),
-    path('books/<int:book_id>/delete/', views.delete_book, name='delete-book'),
+    path('books/<int:book_id>/edit/', views.edit_book, name='edit-books'),
+    path('books/<int:book_id>/delete/', views.delete_book, name='delete-books'),
 
     # Authentication views
     path("register/", views.register, name="register"),
