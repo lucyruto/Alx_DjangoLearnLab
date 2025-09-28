@@ -57,7 +57,7 @@ def add_book(request):
 
 # ---------------- Edit Book View ----------------
 @permission_required('relationship_app.can_change_book', login_url='login')
-def edit_books(request, book_id):
+def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
@@ -71,7 +71,7 @@ def edit_books(request, book_id):
 
 # ---------------- Delete Book View ----------------
 @permission_required('relationship_app.can_delete_book', login_url='login')
-def delete_books(request, book_id):
+def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         book.delete()
