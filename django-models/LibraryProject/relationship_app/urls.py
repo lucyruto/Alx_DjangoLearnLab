@@ -15,7 +15,7 @@ urlpatterns = [
     # Book views
     path("books/", book_list, name="book-list"),
     path("books/add/", add_book, name="add-book"),
-    path("books/<int:book_id>/edit/", edit_book, name="edit-book"),
+    path("books/<int:book_id>/edit/", edit_book, name="edit_book"),
     path("books/<int:book_id>/delete/", delete_book, name="delete-book"),
 
     # authentication views
