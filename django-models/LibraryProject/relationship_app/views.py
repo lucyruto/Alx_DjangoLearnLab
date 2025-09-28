@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import user_passes_test
 from relationship_app.forms import BookForm
+from django.contrib.auth.decorators import permission_required
 
 # ---------------- Role-check helper functions ----------------
 # hasattr(user, "profile") ensures we don’t get errors if the user somehow doesn’t have a profile.
@@ -77,7 +78,7 @@ def delete_book(request, book_id):
         return redirect('book-list')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
 
-    
+
 # ---------------- Function-Based View ----------------
 def book_list(request):
     """Function-based view to list all books and their authors"""
