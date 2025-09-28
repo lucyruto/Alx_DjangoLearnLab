@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import user_passes_test
+from relationship_app.forms import BookForm
 
 # ---------------- Role-check helper functions ----------------
 # hasattr(user, "profile") ensures we don’t get errors if the user somehow doesn’t have a profile.
@@ -37,6 +38,46 @@ def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
 
+
+
+
+# ---------------- Add Book View ----------------
+@permission_required('relationship_app.can_add_book', login_url='login')
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book-list')
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/book_form.html', {'form': form})
+
+
+# ---------------- Edit Book View ----------------
+@permission_required('relationship_app.can_change_book', login_url='login')
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book-list')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/book_form.html', {'form': form, 'book': book})
+
+
+# ---------------- Delete Book View ----------------
+@permission_required('relationship_app.can_delete_book', login_url='login')
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('book-list')
+    return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
+
+    
 # ---------------- Function-Based View ----------------
 def book_list(request):
     """Function-based view to list all books and their authors"""
