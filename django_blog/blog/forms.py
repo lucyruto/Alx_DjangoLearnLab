@@ -16,11 +16,19 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Post form with TagWidget explicitly
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}))
-
+    tags = forms.CharField(
+        widgets = TagWidget(),
+        required=False
+    )
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
+
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
 
 # Comment form
 class CommentForm(forms.ModelForm):
