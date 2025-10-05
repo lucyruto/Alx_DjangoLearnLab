@@ -36,18 +36,4 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
 
-# Search view (ListView)
-class PostSearchView(ListView):
-    model = Post
-    template_name = 'blog/post_search.html'
-    context_object_name = 'posts'
 
-    def get_queryset(self):
-        query = self.request.GET.get('q')
-        if query:
-            return Post.objects.filter(
-                Q(title__icontains=query) | 
-                Q(content__icontains=query) |
-                Q(tags__name__icontains=query)
-            ).distinct()
-        return Post.objects.none()
