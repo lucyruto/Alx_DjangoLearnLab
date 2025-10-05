@@ -4,11 +4,9 @@ from django.contrib.auth.models import User
 from .models import Post, Comment
 from taggit.forms import TagWidget
 from django.db.models import Q
-from taggit.models import Tag
 from django.views.generic import ListView
 
-
-
+# User registration form
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -16,26 +14,22 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-
-
+# Post form with tags
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
-        widgets = {
-            'tags': TagWidget(attrs={'placeholder': 'Add tags separated by commas'})  # <-- use TagWidget
-        }
-
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['content']
+        fields = ['title', 'content', 'tags']  # <-- include tags here
         widgets = {
             'tags': TagWidget(attrs={'placeholder': 'Add tags separated by commas'})
         }
 
+# Comment form (no tags)
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
 
+# Search view (ListView)
 class PostSearchView(ListView):
     model = Post
     template_name = 'blog/post_search.html'
