@@ -14,16 +14,15 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-# Post form with tags
+# Post form with TagWidget explicitly
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(widget=TagWidget(attrs={'placeholder': 'Add tags separated by commas'}))
+
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags']  # <-- include tags here
-        widgets = {
-            'tags': TagWidget(attrs={'placeholder': 'Add tags separated by commas'})
-        }
+        fields = ['title', 'content', 'tags']
 
-# Comment form (no tags)
+# Comment form
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
