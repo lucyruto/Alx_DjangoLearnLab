@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
+from django.urls import reverse
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -10,6 +12,7 @@ class Post(models.Model):
         on_delete=models.CASCADE,  # If the user is deleted, their posts are also deleted
         related_name='posts'       # Allows user.posts.all() to access all posts by this author
     )
+    tags = TaggableManager()
     def __str__(self):
         return self.title
 
