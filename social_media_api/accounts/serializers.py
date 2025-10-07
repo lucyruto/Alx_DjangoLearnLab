@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
 # Get the custom user model
-CustomUser = get_user_model()
+User = get_user_model()
 
 
 # ---------- User Serializer ----------
@@ -11,34 +11,32 @@ class CustomUserSerializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'following']
         read_only_fields = ['id', 'username', 'following']
 
     def get_following(self, obj):
-        # Returns a list of usernames the user follows
         return [user.username for user in obj.following.all()]
 
 
 # ---------- Registration Serializer ----------
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True)  
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ['username', 'email', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        # create_user() automatically handles password hashing
-        user = CustomUser.objects.create_user(**validated_data)
-        # Generate or get authentication token
-        Token.objects.get_or_create(user=user)
+        
+        user = get_user_model().objects.create_user(**validated_data)
+        Token.objects.create(user=user)
         return user
 
 
 # ---------- Login Serializer ----------
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)  
     password = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
@@ -49,6 +47,5 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError("Invalid credentials")
 
-        # Add the user to attrs so views can access it
         attrs['user'] = user
         return attrs
