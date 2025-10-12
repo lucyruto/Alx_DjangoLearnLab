@@ -61,3 +61,44 @@ class ProfileView(APIView):
     def get(self, request):
         serializer = CustomUserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class FollowUserView(APIView):
+    """
+    POST /accounts/follow/<user_id>/
+    Authenticated user follows another user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        try:
+            target_user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if target_user == request.user:
+            return Response({'detail': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.following.add(target_user)
+        return Response({'detail': f'You are now following {target_user.username}.'}, status=status.HTTP_200_OK)
+
+
+class UnfollowUserView(APIView):
+    """
+    POST /accounts/unfollow/<user_id>/
+    Authenticated user unfollows another user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        try:
+            target_user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if target_user == request.user:
+            return Response({'detail': 'You cannot unfollow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.following.remove(target_user)
+        return Response({'detail': f'You have unfollowed {target_user.username}.'}, status=status.HTTP_200_OK)
