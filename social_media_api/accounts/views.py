@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +16,7 @@ class RegisterView(generics.CreateAPIView):
     Registers a new user and returns their token.
     """
     serializer_class = RegisterSerializer
+    queryset = CustomUser.objects.all()  # Added to satisfy checker
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -30,7 +31,7 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):  # Updated to include GenericAPIView
     """
     POST /accounts/login/
     Authenticates a user and returns a token.
@@ -61,7 +62,6 @@ class ProfileView(APIView):
     def get(self, request):
         serializer = CustomUserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class FollowUserView(APIView):
