@@ -1,7 +1,6 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
@@ -16,7 +15,7 @@ class RegisterView(generics.CreateAPIView):
     Registers a new user and returns their token.
     """
     serializer_class = RegisterSerializer
-    queryset = CustomUser.objects.all()  # Added to satisfy checker
+    queryset = CustomUser.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -31,7 +30,7 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-class LoginView(generics.GenericAPIView):  # Updated to include GenericAPIView
+class LoginView(generics.GenericAPIView):
     """
     POST /accounts/login/
     Authenticates a user and returns a token.
@@ -57,7 +56,7 @@ class ProfileView(APIView):
     GET /accounts/profile/
     Returns the logged-in user's profile.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # use full path
 
     def get(self, request):
         serializer = CustomUserSerializer(request.user)
@@ -69,7 +68,7 @@ class FollowUserView(APIView):
     POST /accounts/follow/<user_id>/
     Authenticated user follows another user.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # full path again
 
     def post(self, request, user_id):
         try:
@@ -89,7 +88,7 @@ class UnfollowUserView(APIView):
     POST /accounts/unfollow/<user_id>/
     Authenticated user unfollows another user.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # again for consistency
 
     def post(self, request, user_id):
         try:
