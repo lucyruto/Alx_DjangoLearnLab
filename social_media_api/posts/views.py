@@ -1,10 +1,11 @@
-from rest_framework import viewsets, permissions
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
-from rest_framework import filters
+from rest_framework import viewsets, permissions, filters, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer
+from notifications.models import Notification
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -38,6 +39,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         # Automatically assign the current user as the comment author
         serializer.save(author=self.request.user)
 
+
 class FeedView(APIView):
     """
     GET /posts/feed/
@@ -52,3 +54,13 @@ class FeedView(APIView):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+
+
+class LikePostView(generics.GenericAPIView):
+    """
+    POST /posts/<pk>/like/
+    Allows a user to like a post and notifies the post author.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post
